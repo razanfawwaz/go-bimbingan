@@ -1,8 +1,6 @@
 # Go-Bimbingan
 
-<!-- // import image -->
-
-![Go-Bimbingan](static/gopher.png)
+<img src="static/gopher.png" alt="Go-Bimbingan" width="300" height="300">
 
 ## Description
 
