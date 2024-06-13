@@ -85,3 +85,14 @@ func GraduatesListHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("./templates/partials/graduates.html"))
 	tmpl.Execute(w, students)
 }
+
+func LoginPageHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("./templates/login.html"))
+	errorMsg := r.URL.Query().Get("error")
+	data := struct {
+		Error string
+	}{
+		Error: errorMsg,
+	}
+	tmpl.Execute(w, data)
+}

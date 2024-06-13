@@ -7,15 +7,27 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/razanfawwaz/bimbingan/internal/db"
 	"github.com/razanfawwaz/bimbingan/internal/handlers"
+	"github.com/razanfawwaz/bimbingan/internal/middleware"
+	"github.com/razanfawwaz/bimbingan/util"
 )
 
 func main() {
 	db.Init()
+
+	jwtSecret := util.GetConfig("JWT_SECRET")
+	jwtKey := []byte(jwtSecret)
+
 	r := mux.NewRouter()
-	r.HandleFunc("/", handlers.HomeHandler)
-	r.HandleFunc("/add-graduate", handlers.AddDataHandler).Methods("POST")
-	r.HandleFunc("/admin", handlers.AdminHandler).Methods("GET")
-	r.HandleFunc("/graduates", handlers.GraduatesListHandler)
+	r.HandleFunc("/login", handlers.LoginHandler(jwtKey)).Methods("POST")
+	r.HandleFunc("/login", handlers.LoginPageHandler).Methods("GET")
+
+	adminRouter := r.PathPrefix("/admin").Subrouter()
+	adminRouter.Use(middleware.AuthMiddleware(jwtKey))
+	adminRouter.HandleFunc("/dashboard", handlers.AdminHandler).Methods("GET")
+	adminRouter.HandleFunc("/add-graduate", handlers.AddDataHandler).Methods("POST")
+
+	r.HandleFunc("/graduates", handlers.GraduatesListHandler).Methods("GET")
+	r.HandleFunc("/", handlers.HomeHandler).Methods("GET")
 
 	fs := http.FileServer(http.Dir("templates"))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
