@@ -24,7 +24,7 @@ This is a simple project for a students showcase who are currently doing their f
 ## How to Add Data
 
 1. Open your browser and go to `http://localhost:8080/admin`
-2. Auth [WIP]
+2. Auth
 3. Add data
 
 ## How to contribute
