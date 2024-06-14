@@ -1,7 +1,7 @@
 <div class="container mx-auto">
   <div class="text-center">
-    <h2 class="text-3xl font-bold mb-4">Our Graduates</h2>
-    <p class="mb-12 text-gray-600">
+    <h2 class="text-3xl font-bold mb-4 dark:text-white">Our Graduates</h2>
+    <p class="mb-12 text-gray-600 dark:text-slate-100/80">
       Meet our outstanding graduates who have excelled in their fields.
     </p>
   </div>
@@ -10,7 +10,7 @@
   >
     {{ range . }}
     <div
-      class="bg-white dark:bg-gray-950 rounded-xl overflow-hidden border-2 border-slate-300/50 flex flex-col items-center hover:border-black/80"
+      class="bg-white dark:bg-gray-950 rounded-xl overflow-hidden border-2 border-slate-300/50 flex flex-col items-center hover:border-black/80 dark:hover:border-white/80 transition-colors duration-200"
     >
       <div class="flex justify-center p-4">
         <img
@@ -20,7 +20,7 @@
         />
       </div>
       <div class="p-4 space-y-2 text-center flex-grow overflow-hidden">
-        <h3 class="text-lg font-bold">{{ .Name }}</h3>
+        <h3 class="text-lg font-bold dark:text-slate-200">{{ .Name }}</h3>
         <p class="text-gray-500 dark:text-gray-400">{{ .NPM }}</p>
         <p class="text-sm text-gray-500 dark:text-gray-400">
           {{ .ProjectTitle }}

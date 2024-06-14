@@ -31,14 +31,16 @@ func AddDataHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := ulid.Make().String()
 
+	if picture == "" {
+		picture = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+	}
+
 	_, err := db.DB.Exec("INSERT INTO students (id, name, npm, field_interest, project_title, batch, picture) VALUES ($1, $2, $3, $4, $5, $6, $7)", id, name, npm, fieldInterest, projectTitle, batch, picture)
 	if err != nil {
 		http.Error(w, "cannot insert data", http.StatusInternalServerError)
 		fmt.Print(err)
 		return
 	}
-
-	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func AdminHandler(w http.ResponseWriter, r *http.Request) {

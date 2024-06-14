@@ -51,7 +51,7 @@
         <div class="container mx-auto px-4 md:px-6">
           <div class="space-y-4 text-center">
             <div
-              class="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800"
+              class="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800 dark:text-white"
             >
               Admin Dashboard
             </div>
@@ -64,6 +64,7 @@
               hx-post="/admin/add-graduate"
               class="space-y-4 max-w-lg mx-auto"
               method="POST"
+              hx-on="htmx:afterRequest: window.location.reload()"
             >
               <div class="space-y-2">
                 <label for="name" class="block text-sm font-medium">Name</label>
@@ -89,13 +90,20 @@
                 <label for="field_interest" class="block text-sm font-medium"
                   >Field of Interest</label
                 >
-                <input
-                  type="text"
+                <select
                   name="field_interest"
                   id="field_interest"
                   class="border p-2 w-full rounded"
                   required
-                />
+                >
+                  <option value="" disabled selected>Select a field</option>
+                  <option value="Data Mining">Data Mining</option>
+                  <option value="GIS">GIS</option>
+                  <option value="Jaringan">Jaringan</option>
+                  <option value="Rekayasa Perangkat Lunak">
+                    Rekayasa Perangkat Lunak
+                  </option>
+                </select>
               </div>
               <div class="space-y-2">
                 <label for="project_title" class="block text-sm font-medium"
@@ -130,7 +138,6 @@
                   name="picture"
                   id="picture"
                   class="border p-2 w-full rounded"
-                  required
                 />
               </div>
               <button
@@ -147,9 +154,14 @@
         class="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t"
       >
         <p class="text-xs text-gray-500 dark:text-gray-400">
-          © 2024 Graduate Program. All rights reserved
+          © 2024 Bimbingan Pak Alim. Created by Razan Fawwaz
         </p>
-        <nav class="sm:ml-auto flex gap-4 sm:gap-6"></nav>
+        <a
+          href="https://github.com/razanfawwaz/bimbingan"
+          target="_blank"
+          class="text-xs text-gray-500 dark:text-gray-400 underline"
+          >github.com/razanfawwaz/bimbingan</a
+        >
       </footer>
     </div>
   </body>
