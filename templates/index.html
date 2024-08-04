@@ -63,7 +63,7 @@
               <h1
                 class="text-3xl font-bold tracking-tighter sm:text-5xl md:text-6xl"
               >
-                Celebrating Our Talented Graduates
+                Student & Alumni Showcase
               </h1>
               <p
                 class="max-w-[600px] mx-auto text-gray-500 md:text-xl dark:text-gray-400"
@@ -79,18 +79,27 @@
           class="w-full py-12 md:py-16 lg:py-22 bg-white dark:bg-gray-800"
         >
           <div class="container mx-auto px-4 md:px-6">
-            <div
-              class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-              id="graduates-list"
-            >
-              <div
-                hx-get="/graduates"
-                hx-trigger="load"
-                hx-target="#graduates-list"
-                hx-swap="outerHTML"
-              >
-                Loading graduates...
-              </div>
+            <div class="mb-4 flex justify-end gap-4">
+                <select class="hover:bg-slate-100/80 px-4 py-2 rounded-lg ml-4" name="fieldInterest" hx-get="/graduates" hx-target="#graduates-container" hx-trigger="change" hx-include="[name=batch]">
+                    <option value="">All Interests</option>
+                    <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
+                    <option value="GIS">GIS</option>
+                    <option value="Data Mining">Data Mining</option>
+                    <option value="Jaringan">Jaringan</option>
+                </select>
+
+                <select class="hover:bg-slate-100/80 px-4 py-2 rounded-lg ml-4" name="batch" hx-get="/graduates" hx-target="#graduates-container" hx-trigger="change" hx-include="[name=fieldInterest]">
+                    <option value="">All Batches</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                </select>
+            </div>
+            </div>
+            <div id="graduates-container">
+                <div hx-get="/graduates" hx-trigger="load" hx-target="#graduates-container" hx-swap="innerHTML">
+                    Loading graduates...
+                </div>
             </div>
           </div>
         </section>
@@ -102,10 +111,10 @@
           © 2024 Bimbingan Pak Alim. Created by Razan Fawwaz
         </p>
         <a
-          href="https://github.com/razanfawwaz/bimbingan"
+          href="https://github.com/razanfawwaz/go-bimbingan"
           target="_blank"
           class="text-xs text-gray-500 dark:text-gray-400 underline"
-          >github.com/razanfawwaz/bimbingan</a
+          >github.com/razanfawwaz/go-bimbingan</a
         >
       </footer>
     </div>
