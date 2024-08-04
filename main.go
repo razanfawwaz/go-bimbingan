@@ -24,9 +24,11 @@ func main() {
 	adminRouter := r.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(middleware.AuthMiddleware(jwtKey))
 	adminRouter.HandleFunc("/dashboard", handlers.AdminHandler).Methods("GET")
-	adminRouter.HandleFunc("/add-graduate", handlers.AddDataHandler).Methods("POST")
 
 	r.HandleFunc("/graduates", handlers.GraduatesListHandler).Methods("GET")
+	r.HandleFunc("/add-data", handlers.AddDataPageHandler).Methods("GET")
+	r.HandleFunc("/add-data", handlers.AddDataHandler).Methods("POST")
+
 	r.HandleFunc("/", handlers.HomeHandler).Methods("GET")
 
 	fs := http.FileServer(http.Dir("templates"))

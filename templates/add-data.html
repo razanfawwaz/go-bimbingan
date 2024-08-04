@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Data</title>
+    <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Archivo", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <div class="flex flex-col min-h-[100vh]">
+      <header class="px-4 lg:px-6 h-14 flex items-center bg-white shadow-md">
+        <a class="flex items-center justify-center" href="/">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-6 w-6"
+          >
+            <path
+              d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"
+            ></path>
+            <path d="M22 10v6"></path>
+            <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path>
+          </svg>
+          <span class="sr-only">Graduate Program</span>
+        </a>
+        <nav class="ml-auto flex gap-4 sm:gap-6">
+          <a
+            class="text-sm font-medium hover:underline underline-offset-4"
+            href="/admin/dashboard"
+            >Admin</a
+          >
+        </nav>
+      </header>
+      <main class="flex-1 py-6 md:py-12 lg:py-16">
+              <div class="container mx-auto px-4 md:px-6">
+                <div class="space-y-4 text-center">
+                  <h1 class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                    Add Students Data
+                  </h1>
+                  <div id="message-container">
+                    {{if .Error}}
+                    <div class="bg-red-500 text-white p-2 mb-4 rounded">{{.Error}}</div>
+                    {{end}}
+                    {{if .Success}}
+                    <div class="bg-green-500 text-white p-2 mb-4 rounded">{{.Success}}</div>
+                    {{end}}
+                  </div>
+                  <form
+                    hx-post="/add-data"
+                    hx-target="#message-container"
+                    hx-swap="innerHTML"
+                    class="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    hx-encoding="multipart/form-data"
+                  >
+                    <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div class="space-y-2">
+                        <label for="name" class="block text-sm font-medium">Name</label>
+                        <input type="text" name="name" id="name" class="border p-2 w-full rounded" required />
+                      </div>
+                      <div class="space-y-2">
+                        <label for="npm" class="block text-sm font-medium">NPM</label>
+                        <input type="text" name="npm" id="npm" class="border p-2 w-full rounded" required />
+                      </div>
+                    </div>
+                    <div class="space-y-2">
+                      <label for="field_interest" class="block text-sm font-medium">Field of Interest</label>
+                      <select name="field_interest" id="field_interest" class="border p-2 w-full rounded" required>
+                        <option value="" disabled selected>Choose Field of Interest</option>
+                        <option value="Data Mining">Data Mining</option>
+                        <option value="GIS">GIS</option>
+                        <option value="Jaringan">Jaringan</option>
+                        <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
+                      </select>
+                    </div>
+                    <div class="space-y-2">
+                      <label for="project_title" class="block text-sm font-medium">Project Title</label>
+                      <input
+                        type="text"
+                        name="project_title"
+                        id="project_title"
+                        class="border p-2 w-full rounded"
+                        required
+                      />
+                    </div>
+                    <div class="space-y-2">
+                      <label for="batch" class="block text-sm font-medium">Batch</label>
+                      <select
+                        name="batch"
+                        id="batch"
+                        class="border p-2 w-full rounded"
+                        required
+                      >
+                        <option value="" disabled selected>Choose Year</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                      </select>
+                    </div>
+                    <div class="space-y-2">
+                      <label for="picture" class="block text-sm font-medium">Picture</label>
+                      <input
+                        type="file"
+                        name="picture"
+                        id="picture"
+                        class="border p-2 w-full rounded"
+                        accept="image/*"
+                      />
+                    </div>
+                    <div class="space-y-2">
+                      <label for="profile_link" class="block text-sm font-medium">Profile Link</label>
+                      <input
+                        type="url"
+                        name="profile_link"
+                        id="profile_link"
+                        class="border p-2 w-full rounded"
+                      />
+                    </div>
+                    <div class="space-y-2">
+                      <label for="project_link" class="block text-sm font-medium">Project Link</label>
+                      <input
+                        type="url"
+                        name="project_link"
+                        id="project_link"
+                        class="border p-2 w-full rounded"
+                      />
+                    </div>
+                    <div class="space-y-2">
+                      <label for="is_graduated" class="block text-sm font-medium">Graduation Status</label>
+                      <select
+                        name="is_graduated"
+                        id="is_graduated"
+                        class="border p-2 w-full rounded"
+                        required
+                      >
+                        <option value="" disabled selected>Choose Graduation Status</option>
+                        <option value="graduated">Graduated</option>
+                        <option value="not_graduated">Not Graduated</option>
+                      </select>
+                    </div>
+                    <div class="space-y-2">
+                      <label for="token" class="block text-sm font-medium">Token</label>
+                      <input type="text" name="token" id="token" class="border p-2 w-full rounded" required />
+                    </div>
+                    <button
+                      type="submit"
+                      class="bg-blue-500 text-white px-4 py-2 mt-4 w-full sm:w-auto rounded-lg sm:col-span-2"
+                    >
+                      Add Data
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </main>
+      <footer class="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
+        <p class="text-xs text-gray-500 dark:text-gray-400">© 2024 Bimbingan Pak Alim. Created by Razan Fawwaz</p>
+        <a
+          href="https://github.com/razanfawwaz/go-bimbingan"
+          target="_blank"
+          class="text-xs text-gray-500 dark:text-gray-400 underline"
+          >github.com/razanfawwaz/go-bimbingan</a
+        >
+      </footer>
+    </div>
+  </body>
+</html>

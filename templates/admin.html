@@ -50,65 +50,55 @@
       <main class="flex-1 py-12 md:py-24 lg:py-32">
         <div class="container mx-auto px-4 md:px-6">
           <div class="space-y-4 text-center">
-            <div
-              class="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800 dark:text-white"
-            >
-              Admin Dashboard
-            </div>
-            <h1
-              class="text-3xl font-bold tracking-tighter sm:text-5xl md:text-6xl"
-            >
-              Add New Graduate
+            <h1 class="text-3xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
+              Add Students Data
             </h1>
             <form
               hx-post="/admin/add-graduate"
-              class="space-y-4 max-w-lg mx-auto"
+              class="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto"
               method="POST"
+              enctype="multipart/form-data"
               hx-on="htmx:afterRequest: window.location.reload()"
             >
-              <div class="space-y-2">
-                <label for="name" class="block text-sm font-medium">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  class="border p-2 w-full rounded"
-                  required
-                />
+              <div class="md:flex md:space-x-4 md:col-span-2">
+                <div class="flex-1 space-y-2">
+                  <label for="name" class="block text-sm font-medium">Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    class="border p-2 w-full rounded"
+                    required
+                  />
+                </div>
+                <div class="flex-1 space-y-2">
+                  <label for="npm" class="block text-sm font-medium">NPM</label>
+                  <input
+                    type="text"
+                    name="npm"
+                    id="npm"
+                    class="border p-2 w-full rounded"
+                    required
+                  />
+                </div>
               </div>
               <div class="space-y-2">
-                <label for="npm" class="block text-sm font-medium">NPM</label>
-                <input
-                  type="text"
-                  name="npm"
-                  id="npm"
-                  class="border p-2 w-full rounded"
-                  required
-                />
-              </div>
-              <div class="space-y-2">
-                <label for="field_interest" class="block text-sm font-medium"
-                  >Field of Interest</label
-                >
+                <label for="field_interest" class="block text-sm font-medium">Field of Interest</label>
                 <select
                   name="field_interest"
                   id="field_interest"
                   class="border p-2 w-full rounded"
                   required
                 >
-                  <option value="" disabled selected>Select a field</option>
+                  <option value="" disabled selected>Choose Field of Interest</option>
                   <option value="Data Mining">Data Mining</option>
                   <option value="GIS">GIS</option>
                   <option value="Jaringan">Jaringan</option>
-                  <option value="Rekayasa Perangkat Lunak">
-                    Rekayasa Perangkat Lunak
-                  </option>
+                  <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
                 </select>
               </div>
               <div class="space-y-2">
-                <label for="project_title" class="block text-sm font-medium"
-                  >Project Title</label
-                >
+                <label for="project_title" class="block text-sm font-medium">Project Title</label>
                 <input
                   type="text"
                   name="project_title"
@@ -118,44 +108,82 @@
                 />
               </div>
               <div class="space-y-2">
-                <label for="batch" class="block text-sm font-medium"
-                  >Batch</label
-                >
-                <input
-                  type="text"
+                <label for="batch" class="block text-sm font-medium">Batch</label>
+                <select
                   name="batch"
                   id="batch"
                   class="border p-2 w-full rounded"
                   required
+                >
+                  <option value="" disabled selected>Choose Year</option>
+                  <option value="2018">2018</option>
+                  <option value="2019">2019</option>
+                  <option value="2020">2020</option>
+                  <option value="2021">2021</option>
+                </select>
+              </div>
+              <div class="space-y-2">
+                <label for="picture" class="block text-sm font-medium">Picture</label>
+                <input
+                  type="file"
+                  name="picture"
+                  id="picture"
+                  class="border p-2 w-full rounded"
+                  accept="image/*"
                 />
               </div>
               <div class="space-y-2">
-                <label for="picture" class="block text-sm font-medium"
-                  >Picture URL</label
-                >
+                <label for="profile_link" class="block text-sm font-medium">Profile Link</label>
                 <input
                   type="url"
-                  name="picture"
-                  id="picture"
+                  name="profile_link"
+                  id="profile_link"
+                  class="border p-2 w-full rounded"
+                />
+              </div>
+              <div class="space-y-2">
+                <label for="project_link" class="block text-sm font-medium">Project Link</label>
+                <input
+                  type="url"
+                  name="project_link"
+                  id="project_link"
+                  class="border p-2 w-full rounded"
+                />
+              </div>
+              <div class="space-y-2">
+                <label for="is_graduated" class="block text-sm font-medium">Graduation Status</label>
+                <select
+                  name="is_graduated"
+                  id="is_graduated"
+                  class="border p-2 w-full rounded"
+                  required
+                >
+                  <option value="" disabled selected>Choose Graduation Status</option>
+                  <option value="graduated">Graduated</option>
+                  <option value="not_graduated">Not Graduated</option>
+                </select>
+              </div>
+              <div class="space-y-2">
+                <label for="token" class="block text-sm font-medium">Token</label>
+                <input
+                  type="text"
+                  name="token"
+                  id="token"
                   class="border p-2 w-full rounded"
                 />
               </div>
               <button
                 type="submit"
-                class="bg-blue-500 text-white px-4 py-2 mt-4 w-full md:w-auto rounded"
+                class="bg-blue-500 text-white px-4 py-2 mt-4 w-full md:w-auto rounded-lg md:col-span-2"
               >
-                Add Graduate
+                Add Data
               </button>
             </form>
           </div>
         </div>
       </main>
-      <footer
-        class="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t"
-      >
-        <p class="text-xs text-gray-500 dark:text-gray-400">
-          © 2024 Bimbingan Pak Alim. Created by Razan Fawwaz
-        </p>
+      <footer class="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
+        <p class="text-xs text-gray-500 dark:text-gray-400">© 2024 Bimbingan Pak Alim. Created by Razan Fawwaz</p>
         <a
           href="https://github.com/razanfawwaz/go-bimbingan"
           target="_blank"
