@@ -1,0 +1,60 @@
+<div id="graduates-list" class="container mx-auto">
+  <div class="text-center">
+    <h2 id="our-graduates" class="text-3xl font-bold mb-4 dark:text-white">Students Pending Data</h2>
+  </div>
+  <table class="min-w-full bg-white dark:bg-gray-950 rounded-xl overflow-hidden border-2 border-slate-300/50">
+              <thead>
+                  <tr class="bg-gray-200 dark:bg-gray-900">
+                      <th class="py-2 px-4 border-b dark:text-white">Name</th>
+                      <th class="py-2 px-4 border-b dark:text-white">NPM</th>
+                      <th class="py-2 px-4 border-b dark:text-white">Field of Interest</th>
+                      <th class="py-2 px-4 border-b dark:text-white">Project Title</th>
+                      <th class="py-2 px-4 border-b dark:text-white">Batch</th>
+                      <th class="py-2 px-4 border-b dark:text-white">Picture</th>
+                      <th class="py-2 px-4 border-b dark:text-white">Profile</th>
+                      <th class="py-2 px-4 border-b dark:text-white">Project</th>
+                      <th class="py-2 px-4 border-b dark:text-white">Graduation Status</th>
+                      <th class="py-2 px-4 border-b dark:text-white">Actions</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {{ range . }}
+                  <tr id="student-{{ .Id }}">
+                      <td class="py-2 px-4 border-b dark:text-white">{{ .Name }}</td>
+                      <td class="py-2 px-4 border-b dark:text-white">{{ .NPM }}</td>
+                      <td class="py-2 px-4 border-b dark:text-white">{{ .FieldInterest }}</td>
+                      <td class="py-2 px-4 border-b dark:text-white">{{ .ProjectTitle }}</td>
+                      <td class="py-2 px-4 border-b dark:text-white">{{ .Batch }}</td>
+                      <td class="py-2 px-4 border-b dark:text-white">
+                          <img src="{{ .Picture }}" alt="{{ .Name }}" class="w-16 h-16 rounded-full object-cover">
+                      </td>
+                      <td class="py-2 px-4 border-b dark:text-white">
+                          <a href="{{ .ProfileLink }}" class="text-blue-500 hover:underline" target="_blank">Profile</a>
+                      </td>
+                      <td class="py-2 px-4 border-b dark:text-white">
+                          <a href="{{ .ProjectLink }}" class="text-blue-500 hover:underline" target="_blank">Project</a>
+                      </td>
+                      <td class="py-2 px-2 border-b dark:text-white">
+                          {{if .GraduationStatus}}
+                          <span class="bg-teal-600 text-white text-xs font-bold uppercase py-1 px-3 rounded-lg">Lulus</span>
+                          {{else}}
+                          <span class="bg-yellow-600 text-white text-xs font-bold uppercase py-1 px-3 rounded-lg">Belum Lulus</span>
+                          {{end}}
+                      </td>
+                      <td class="py-2 px-4 border-b dark:text-white">
+                          <form hx-patch="/admin/update-status" hx-swap="outerHTML" class="inline">
+                              <input type="hidden" name="id" value="{{ .Id }}">
+                              <input type="hidden" name="status" value="approved">
+                              <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">Accept</button>
+                          </form>
+                          <form hx-patch="/admin/update-status" hx-swap="outerHTML" class="inline">
+                              <input type="hidden" name="id" value="{{ .Id }}">
+                              <input type="hidden" name="status" value="rejected">
+                              <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">Reject</button>
+                          </form>
+                      </td>
+                  </tr>
+                  {{ end }}
+              </tbody>
+          </table>
+</div>

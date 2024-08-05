@@ -10,8 +10,10 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/go-playground/validator"
 	"github.com/oklog/ulid/v2"
 	"github.com/razanfawwaz/bimbingan/internal/db" // Add this line to import the package
+	"github.com/razanfawwaz/bimbingan/internal/model"
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,35 +28,53 @@ func AddDataHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func AddData(w http.ResponseWriter, r *http.Request) error {
-	name := r.FormValue("name")
-	npm := r.FormValue("npm")
-	fieldInterest := r.FormValue("field_interest")
-	projectTitle := r.FormValue("project_title")
-	batch := r.FormValue("batch")
-	token := r.FormValue("token")
-	projectLink := r.FormValue("project_link")
-	profileLink := r.FormValue("profile_link")
-	graduateStatus := r.FormValue("is_graduated")
+func validateFormData(form *model.StudentForm) error {
+	validate := validator.New()
 
-	if graduateStatus == "graduated" {
-		graduateStatus = "true"
-	} else if graduateStatus == "not_graduated" {
-		graduateStatus = "false"
-	} else {
-		http.Error(w, "invalid graduate status", http.StatusBadRequest)
-		return errors.New("invalid graduate status")
+	// Validate struct fields
+	if err := validate.Struct(form); err != nil {
+		return err
 	}
+	return nil
+}
 
-	if !CheckToken(token) {
-		http.Error(w, "invalid token", http.StatusUnauthorized)
-		return errors.New("invalid token")
+func AddData(w http.ResponseWriter, r *http.Request) error {
+
+	form := &model.StudentForm{
+		Name:          r.FormValue("name"),
+		NPM:           r.FormValue("npm"),
+		FieldInterest: r.FormValue("field_interest"),
+		ProjectTitle:  r.FormValue("project_title"),
+		Batch:         r.FormValue("batch"),
+		Token:         r.FormValue("token"),
+		ProjectLink:   r.FormValue("project_link"),
+		ProfileLink:   r.FormValue("profile_link"),
+		IsGraduated:   r.FormValue("is_graduated"),
 	}
 
 	file, _, err := r.FormFile("picture")
 	if err != nil && err != http.ErrMissingFile {
 		http.Error(w, "failed to read file", http.StatusBadRequest)
 		return err
+	}
+
+	if err := validateFormData(form); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return err
+	}
+
+	if form.IsGraduated == "graduated" {
+		form.IsGraduated = "true"
+	} else if form.IsGraduated == "not_graduated" {
+		form.IsGraduated = "false"
+	} else {
+		http.Error(w, "invalid graduate status", http.StatusBadRequest)
+		return errors.New("invalid graduate status")
+	}
+
+	if !CheckToken(form.Token) {
+		http.Error(w, "invalid token", http.StatusUnauthorized)
+		return errors.New("invalid token")
 	}
 
 	var pictureURL string
@@ -81,7 +101,7 @@ func AddData(w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 
-		fileKey := ulid.MustNew(ulid.Now(), nil).String() + fileExtension
+		fileKey := ulid.Make().String() + fileExtension
 		err = s3Service.UploadFileToR2(context.TODO(), fileKey, fileBytes, contentType)
 		if err != nil {
 			http.Error(w, "failed to upload file to R2", http.StatusInternalServerError)
@@ -94,7 +114,7 @@ func AddData(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	id := ulid.Make().String()
-	_, err = db.DB.Exec("INSERT INTO students (id, name, npm, field_interest, project_title, batch, picture, profile_link, project_link, is_graduated, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", id, name, npm, fieldInterest, projectTitle, batch, pictureURL, profileLink, projectLink, graduateStatus, "pending")
+	_, err = db.DB.Exec("INSERT INTO students (id, name, npm, field_interest, project_title, batch, picture, profile_link, project_link, is_graduated, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", id, form.Name, form.NPM, form.FieldInterest, form.ProjectTitle, form.Batch, pictureURL, form.ProfileLink, form.ProjectLink, form.IsGraduated, "pending")
 	if err != nil {
 		http.Error(w, "cannot insert data", http.StatusInternalServerError)
 		return err
@@ -107,25 +127,13 @@ func AddData(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-// create a function that check token to database table token
-
-func CheckToken(token string) bool {
-	var expiredAt time.Time
-	err := db.DB.QueryRow("SELECT expired_at FROM token WHERE id = $1", token).Scan(&expiredAt)
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
-
-	if expiredAt.Before(time.Now()) {
-		return false
-	}
-
-	return true
-}
-
 func AdminHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("./templates/admin.html"))
+	tmpl.Execute(w, nil)
+}
+
+func AdvisorHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("./templates/advisor.html"))
 	tmpl.Execute(w, nil)
 }
 
@@ -208,4 +216,129 @@ func LoginPageHandler(w http.ResponseWriter, r *http.Request) {
 func AddDataPageHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("./templates/add-data.html"))
 	tmpl.Execute(w, nil)
+}
+
+func GetStudentsData(w http.ResponseWriter, r *http.Request) {
+	query := "SELECT id, name, npm, field_interest, project_title, batch, picture, project_link, profile_link, is_graduated FROM students WHERE status = 'pending'"
+
+	rows, err := db.DB.Query(query)
+	if err != nil {
+		http.Error(w, "Database query failed", http.StatusInternalServerError)
+		fmt.Println(err)
+		return
+	}
+	defer rows.Close()
+
+	var students []struct {
+		Id               string
+		Name             string
+		NPM              string
+		FieldInterest    string
+		ProjectTitle     string
+		Batch            string
+		Picture          string
+		ProjectLink      string
+		ProfileLink      string
+		GraduationStatus bool
+	}
+
+	for rows.Next() {
+		var s struct {
+			Id               string
+			Name             string
+			NPM              string
+			FieldInterest    string
+			ProjectTitle     string
+			Batch            string
+			Picture          string
+			ProjectLink      string
+			ProfileLink      string
+			GraduationStatus bool
+		}
+		if err := rows.Scan(&s.Id, &s.Name, &s.NPM, &s.FieldInterest, &s.ProjectTitle, &s.Batch, &s.Picture, &s.ProjectLink, &s.ProfileLink, &s.GraduationStatus); err != nil {
+			http.Error(w, "Data scan failed", http.StatusInternalServerError)
+			fmt.Print(err)
+			return
+		}
+		students = append(students, s)
+	}
+
+	tmpl := template.Must(template.ParseFiles("./templates/partials/graduates-table.html"))
+	tmpl.Execute(w, students)
+}
+
+func UpdateStatusHandler(w http.ResponseWriter, r *http.Request) {
+	form := &model.UpdateStatusRequest{
+		Id:     r.FormValue("id"),
+		Status: r.FormValue("status"),
+	}
+
+	// update status and updated_at where id = form.Id
+	_, err := db.DB.Exec("UPDATE students SET status = $1, updated_at = $2 WHERE id = $3", form.Status, time.Now(), form.Id)
+	if err != nil {
+		http.Error(w, "cannot update data", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, `{"message": "Data updated successfully"}`)
+}
+
+// create a function that check token to database table token
+
+func CheckToken(token string) bool {
+	var expiredAt time.Time
+	err := db.DB.QueryRow("SELECT expired_at FROM token WHERE id = $1", token).Scan(&expiredAt)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	if expiredAt.Before(time.Now()) {
+		return false
+	}
+
+	return true
+}
+
+func CreateToken(w http.ResponseWriter, r *http.Request) {
+	token := ulid.Make().String()
+	expiredAt := time.Now().Add(time.Hour * 72)
+
+	_, err := db.DB.Exec("INSERT INTO token (id, expired_at) VALUES ($1, $2)", token, expiredAt)
+	if err != nil {
+		http.Error(w, "cannot create token", http.StatusInternalServerError)
+		return
+	}
+}
+
+func GetAllToken(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.DB.Query("SELECT id, expired_at FROM token")
+	if err != nil {
+		http.Error(w, "Database query failed", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var tokens []struct {
+		Id        string
+		ExpiredAt time.Time
+	}
+
+	for rows.Next() {
+		var t struct {
+			Id        string
+			ExpiredAt time.Time
+		}
+		if err := rows.Scan(&t.Id, &t.ExpiredAt); err != nil {
+			http.Error(w, "Data scan failed", http.StatusInternalServerError)
+			fmt.Print(err)
+			return
+		}
+		tokens = append(tokens, t)
+	}
+
+	tmpl := template.Must(template.ParseFiles("./templates/partials/tokens-table.html"))
+	tmpl.Execute(w, tokens)
 }

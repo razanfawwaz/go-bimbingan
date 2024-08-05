@@ -24,10 +24,15 @@ func main() {
 	adminRouter := r.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(middleware.AuthMiddleware(jwtKey))
 	adminRouter.HandleFunc("/dashboard", handlers.AdminHandler).Methods("GET")
+	adminRouter.HandleFunc("/graduates", handlers.GetStudentsData).Methods("GET")
+	adminRouter.HandleFunc("/update-status", handlers.UpdateStatusHandler).Methods("PATCH")
+	adminRouter.HandleFunc("/token", handlers.GetAllToken).Methods("GET")
+	adminRouter.HandleFunc("/token", handlers.CreateToken).Methods("POST")
 
 	r.HandleFunc("/graduates", handlers.GraduatesListHandler).Methods("GET")
 	r.HandleFunc("/add-data", handlers.AddDataPageHandler).Methods("GET")
 	r.HandleFunc("/add-data", handlers.AddDataHandler).Methods("POST")
+	r.HandleFunc("/advisor", handlers.AdvisorHandler).Methods("GET")
 
 	r.HandleFunc("/", handlers.HomeHandler).Methods("GET")
 

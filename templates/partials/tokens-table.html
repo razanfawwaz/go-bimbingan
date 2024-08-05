@@ -1,0 +1,18 @@
+<div id="tokens-list" class="container mx-auto">
+  <table class="min-w-full bg-white dark:bg-gray-950 rounded-xl overflow-hidden border-2 border-slate-300/50">
+              <thead>
+                  <tr class="bg-gray-200 dark:bg-gray-900">
+                      <th class="py-2 px-4 border-b dark:text-white">Token</th>
+                      <th class="py-2 px-4 border-b dark:text-white">Expired At</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {{ range . }}
+                  <tr id="student-{{ .Id }}">
+                      <td class="py-2 px-4 border-b dark:text-white">{{ .Id }}</td>
+                      <td class="py-2 px-4 border-b dark:text-white">{{ .ExpiredAt }}</td>
+                  </tr>
+                  {{ end }}
+              </tbody>
+          </table>
+</div>

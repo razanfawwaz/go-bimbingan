@@ -72,16 +72,16 @@
                   >
                     <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div class="space-y-2">
-                        <label for="name" class="block text-sm font-medium">Name</label>
+                        <label for="name" class="block text-sm font-medium"><span class="px-1 text-red-500">*</span>Name</label>
                         <input type="text" name="name" id="name" class="border p-2 w-full rounded" required />
                       </div>
                       <div class="space-y-2">
-                        <label for="npm" class="block text-sm font-medium">NPM</label>
-                        <input type="text" name="npm" id="npm" class="border p-2 w-full rounded" required />
+                        <label for="npm" class="block text-sm font-medium"><span class="px-1 text-red-500">*</span>NPM</label>
+                        <input type="number" name="npm" id="npm" class="border p-2 w-full rounded" required />
                       </div>
                     </div>
                     <div class="space-y-2">
-                      <label for="field_interest" class="block text-sm font-medium">Field of Interest</label>
+                      <label for="field_interest" class="block text-sm font-medium"><span class="px-1 text-red-500">*</span>Field of Interest</label>
                       <select name="field_interest" id="field_interest" class="border p-2 w-full rounded" required>
                         <option value="" disabled selected>Choose Field of Interest</option>
                         <option value="Data Mining">Data Mining</option>
@@ -91,7 +91,7 @@
                       </select>
                     </div>
                     <div class="space-y-2">
-                      <label for="project_title" class="block text-sm font-medium">Project Title</label>
+                      <label for="project_title" class="block text-sm font-medium"><span class="px-1 text-red-500">*</span>Project Title</label>
                       <input
                         type="text"
                         name="project_title"
@@ -101,7 +101,7 @@
                       />
                     </div>
                     <div class="space-y-2">
-                      <label for="batch" class="block text-sm font-medium">Batch</label>
+                      <label for="batch" class="block text-sm font-medium"><span class="px-1 text-red-500">*</span>Batch</label>
                       <select
                         name="batch"
                         id="batch"
@@ -116,7 +116,7 @@
                       </select>
                     </div>
                     <div class="space-y-2">
-                      <label for="picture" class="block text-sm font-medium">Picture</label>
+                      <label for="picture" class="block text-sm font-medium"><span class="px-1 text-red-500">*</span>Picture</label>
                       <input
                         type="file"
                         name="picture"
@@ -126,7 +126,7 @@
                       />
                     </div>
                     <div class="space-y-2">
-                      <label for="profile_link" class="block text-sm font-medium">Profile Link</label>
+                      <label for="profile_link" class="block text-sm font-medium"><span class="px-1 text-red-500">*</span>Profile Link</label>
                       <input
                         type="url"
                         name="profile_link"
@@ -135,7 +135,7 @@
                       />
                     </div>
                     <div class="space-y-2">
-                      <label for="project_link" class="block text-sm font-medium">Project Link</label>
+                      <label for="project_link" class="block text-sm font-medium"><span class="px-1 text-red-500">*</span>Project Link</label>
                       <input
                         type="url"
                         name="project_link"
@@ -144,7 +144,7 @@
                       />
                     </div>
                     <div class="space-y-2">
-                      <label for="is_graduated" class="block text-sm font-medium">Graduation Status</label>
+                      <label for="is_graduated" class="block text-sm font-medium"><span class="px-1 text-red-500">*</span>Graduation Status</label>
                       <select
                         name="is_graduated"
                         id="is_graduated"
@@ -157,7 +157,7 @@
                       </select>
                     </div>
                     <div class="space-y-2">
-                      <label for="token" class="block text-sm font-medium">Token</label>
+                      <label for="token" class="block text-sm font-medium"><span class="px-1 text-red-500">*</span>Token</label>
                       <input type="text" name="token" id="token" class="border p-2 w-full rounded" required />
                     </div>
                     <button
