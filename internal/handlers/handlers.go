@@ -133,7 +133,7 @@ func GraduatesListHandler(w http.ResponseWriter, r *http.Request) {
 	fieldInterest := r.URL.Query().Get("fieldInterest")
 	batch := r.URL.Query().Get("batch")
 
-	query := "SELECT name, npm, field_interest, project_title, batch, picture FROM students WHERE 1=1"
+	query := "SELECT name, npm, field_interest, project_title, batch, picture, project_link, profile_link, is_graduated FROM students WHERE status = 'approved'"
 	args := []interface{}{}
 	argCount := 1
 
@@ -159,25 +159,32 @@ func GraduatesListHandler(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 
 	var students []struct {
-		Name          string
-		NPM           string
-		FieldInterest string
-		ProjectTitle  string
-		Batch         string
-		Picture       string
+		Name             string
+		NPM              string
+		FieldInterest    string
+		ProjectTitle     string
+		Batch            string
+		Picture          string
+		ProjectLink      string
+		ProfileLink      string
+		GraduationStatus bool
 	}
 
 	for rows.Next() {
 		var s struct {
-			Name          string
-			NPM           string
-			FieldInterest string
-			ProjectTitle  string
-			Batch         string
-			Picture       string
+			Name             string
+			NPM              string
+			FieldInterest    string
+			ProjectTitle     string
+			Batch            string
+			Picture          string
+			ProjectLink      string
+			ProfileLink      string
+			GraduationStatus bool
 		}
-		if err := rows.Scan(&s.Name, &s.NPM, &s.FieldInterest, &s.ProjectTitle, &s.Batch, &s.Picture); err != nil {
+		if err := rows.Scan(&s.Name, &s.NPM, &s.FieldInterest, &s.ProjectTitle, &s.Batch, &s.Picture, &s.ProjectLink, &s.ProfileLink, &s.GraduationStatus); err != nil {
 			http.Error(w, "Data scan failed", http.StatusInternalServerError)
+			fmt.Print(err)
 			return
 		}
 		students = append(students, s)
