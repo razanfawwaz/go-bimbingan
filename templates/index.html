@@ -90,7 +90,7 @@
         >
           <div class="container mx-auto px-4 md:px-6">
             <div class="mb-4 flex justify-end gap-4">
-                <select class="hover:bg-slate-100/80 px-4 py-2 rounded-lg ml-4" name="fieldInterest" hx-get="/graduates" hx-target="#graduates-container" hx-trigger="change" hx-include="[name=batch]">
+                <select class="hover:bg-slate-100/80 px-4 py-2 rounded-lg ml-4" name="fieldInterest" hx-get="/graduates" hx-target="#graduates-container" hx-trigger="change" hx-include="[name=batch], [name=isGraduated]">
                     <option value="">All Interests</option>
                     <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
                     <option value="GIS">GIS</option>
@@ -98,11 +98,18 @@
                     <option value="Jaringan">Jaringan</option>
                 </select>
 
-                <select class="hover:bg-slate-100/80 px-4 py-2 rounded-lg ml-4" name="batch" hx-get="/graduates" hx-target="#graduates-container" hx-trigger="change" hx-include="[name=fieldInterest]">
+                <select class="hover:bg-slate-100/80 px-4 py-2 rounded-lg ml-4" name="batch" hx-get="/graduates" hx-target="#graduates-container" hx-trigger="change" hx-include="[name=fieldInterest], [name=isGraduated]">
                     <option value="">All Batches</option>
                     <option value="2020">2020</option>
                     <option value="2021">2021</option>
                     <option value="2022">2022</option>
+                </select>
+
+                <!-- // select isGraduated -->
+                <select class="hover:bg-slate-100/80 px-4 py-2 rounded-lg ml-4" name="isGraduated" hx-get="/graduates" hx-target="#graduates-container" hx-trigger="change" hx-include="[name=batch], [name=fieldInterest]">
+                    <option value="">All Graduates</option>
+                    <option value="1">Graduated</option>
+                    <option value="0">Not Graduated</option>
                 </select>
             </div>
             </div>

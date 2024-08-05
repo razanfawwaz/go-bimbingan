@@ -140,6 +140,7 @@ func AdvisorHandler(w http.ResponseWriter, r *http.Request) {
 func GraduatesListHandler(w http.ResponseWriter, r *http.Request) {
 	fieldInterest := r.URL.Query().Get("fieldInterest")
 	batch := r.URL.Query().Get("batch")
+	isGraduated := r.URL.Query().Get("isGraduated")
 
 	query := "SELECT name, npm, field_interest, project_title, batch, picture, project_link, profile_link, is_graduated FROM students WHERE status = 'approved'"
 	args := []interface{}{}
@@ -148,6 +149,12 @@ func GraduatesListHandler(w http.ResponseWriter, r *http.Request) {
 	if fieldInterest != "" {
 		query += fmt.Sprintf(" AND field_interest = $%d", argCount)
 		args = append(args, fieldInterest)
+		argCount++
+	}
+
+	if isGraduated != "" {
+		query += fmt.Sprintf(" AND is_graduated = $%d", argCount)
+		args = append(args, isGraduated)
 		argCount++
 	}
 
